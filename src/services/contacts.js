@@ -1,9 +1,14 @@
 import Contact from '../model/modlcontact.js';
 
-export async function getAllContacts() {
+export async function getAllContacts(page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', filters = {}) {
     try {
-        const contacts = await Contact.find();
-        return contacts;
+        const totalItems = await Contact.countDocuments(filters);
+        const sortOption = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
+        const contacts = await Contact.find(filters)
+            .sort(sortOption)
+            .skip((page - 1) * perPage)
+            .limit(perPage);
+        return { contacts, totalItems };
     } catch (error) {
         throw new Error(`Error fetching contacts: ${error.message}`);
     }
