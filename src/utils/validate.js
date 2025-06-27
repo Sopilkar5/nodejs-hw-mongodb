@@ -37,6 +37,9 @@ export const createContactSchema = Joi.object({
       'any.only': 'Contact type must be one of: work, home, personal',
       'any.required': 'Contact type is required',
     }),
+  photo: Joi.string().uri().optional().messages({
+    'string.uri': 'Photo must be a valid URL',
+  }),
 });
 
 export const updateContactSchema = Joi.object({
@@ -64,6 +67,9 @@ export const updateContactSchema = Joi.object({
     .messages({
       'any.only': 'Contact type must be one of: work, home, personal',
     }),
+  photo: Joi.string().uri().optional().messages({
+    'string.uri': 'Photo must be a valid URL',
+  }),
 }).min(1).messages({
   'object.min': 'At least one field must be provided for update',
 });
@@ -89,6 +95,25 @@ export const loginSchema = Joi.object({
   email: Joi.string().email().required().messages({
     'string.email': 'Email must be a valid email address',
     'any.required': 'Email is required',
+  }),
+  password: Joi.string().min(8).required().messages({
+    'string.base': 'Password should be a string',
+    'string.min': 'Password should have at least 8 characters',
+    'any.required': 'Password is required',
+  }),
+});
+
+export const sendResetEmailSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    'string.email': 'Email must be a valid email address',
+    'any.required': 'Email is required',
+  }),
+});
+
+export const resetPasswordSchema = Joi.object({
+  token: Joi.string().required().messages({
+    'string.base': 'Token should be a string',
+    'any.required': 'Token is required',
   }),
   password: Joi.string().min(8).required().messages({
     'string.base': 'Password should be a string',

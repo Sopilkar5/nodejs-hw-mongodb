@@ -1,5 +1,5 @@
 import createError from 'http-errors';
-import { getAllContacts as getAllContactsService, getContactById as getContactByIdService, createContact as createContactService, updateContact as updateContactService, deleteContact as deleteContactService } from '../services/contacts.js';
+import { getAllContacts as getAllContactsService, getContactById as getContactByIdService, createContact as createContactService, updateContact as updateContactService, deleteContact as deleteContactService, uploadContactPhoto } from '../services/contacts.js';
 
 export async function getAllContacts(req, res) {
   if (!req.user || !req.user._id) {
@@ -71,12 +71,23 @@ export async function getContactById(req, res) {
 }
 
 export async function createContact(req, res) {
-  const { name, phoneNumber, email, isFavourite, contactType } = req.body;
   if (!req.user || !req.user._id) {
     throw createError(401, 'Unauthorized: User not authenticated');
   }
   const userId = req.user._id;
-  const contact = await createContactService({ name, phoneNumber, email, isFavourite, contactType }, userId);
+  const data = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email || undefined,
+    isFavourite: req.body.isFavourite === 'true' || req.body.isFavourite === true,
+    contactType: req.body.contactType,
+  };
+
+  if (req.file) {
+    data.photo = await uploadContactPhoto(req.file);
+  }
+
+  const contact = await createContactService(data, userId);
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
@@ -86,11 +97,22 @@ export async function createContact(req, res) {
 
 export async function updateContact(req, res) {
   const { contactId } = req.params;
-  const updates = req.body;
   if (!req.user || !req.user._id) {
     throw createError(401, 'Unauthorized: User not authenticated');
   }
   const userId = req.user._id;
+  const updates = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email || undefined,
+    isFavourite: req.body.isFavourite === 'true' || req.body.isFavourite === true,
+    contactType: req.body.contactType,
+  };
+
+  if (req.file) {
+    updates.photo = await uploadContactPhoto(req.file);
+  }
+
   const contact = await updateContactService(contactId, updates, userId);
   if (!contact) {
     throw createError(404, 'Contact not found');

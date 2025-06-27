@@ -26,7 +26,13 @@ const contactSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'User ID is required'],
   },
+  photo: {
+    type: String,
+    default: null,
+  },
 });
+
+contactSchema.index({ userId: 1 });
 
 const Contact = mongoose.model('Contact', contactSchema);
 

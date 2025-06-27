@@ -1,6 +1,7 @@
 import createError from 'http-errors';
 import bcrypt from 'bcrypt';
-import { registerUser, loginUser, refreshUserSession, logoutUser } from '../services/auth.js';
+import { registerUser, loginUser, refreshUserSession, logoutUser, generateResetToken, resetPassword } from '../services/auth.js';
+import { sendResetPasswordEmail } from '../services/email.js';
 
 export async function register(req, res) {
   const { name, email, password } = req.body;
@@ -47,7 +48,7 @@ export async function refresh(req, res) {
   res.cookie('refreshToken', newRefreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 30 * 24 * 60 * 60 * 1000, 
+    maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 
   res.status(200).json({
@@ -65,4 +66,27 @@ export async function logout(req, res) {
 
   res.clearCookie('refreshToken');
   res.status(204).send();
+}
+
+export async function sendResetEmail(req, res) {
+  const { email } = req.body;
+  const token = await generateResetToken(email);
+  await sendResetPasswordEmail(email, token);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Reset password email has been successfully sent.',
+    data: {},
+  });
+}
+
+export async function resetUserPassword(req, res) {
+  const { token, password } = req.body;
+  await resetPassword(token, password);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Password has been successfully reset.',
+    data: {},
+  });
 }
