@@ -9,7 +9,6 @@ import { isValidId } from '../utils/isValidId.js';
 const router = express.Router();
 
 router.use(authenticate);
-
 router.get('/', ctrlWrapper(getAllContacts));
 router.get('/:contactId', isValidId, ctrlWrapper(getContactById));
 router.post('/', upload.single('photo'), validateBody(createContactSchema), ctrlWrapper(createContact));
