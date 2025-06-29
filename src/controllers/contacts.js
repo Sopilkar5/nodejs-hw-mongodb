@@ -113,6 +113,12 @@ export async function updateContact(req, res) {
     updates.photo = await uploadContactPhoto(req.file);
   }
 
+  // Дозволяємо оновлення, якщо є лише photo
+  const hasUpdates = Object.keys(updates).some(key => updates[key] !== undefined) || req.file;
+  if (!hasUpdates) {
+    throw createError(400, 'At least one field or photo must be provided for update');
+  }
+
   const contact = await updateContactService(contactId, updates, userId);
   if (!contact) {
     throw createError(404, 'Contact not found');
