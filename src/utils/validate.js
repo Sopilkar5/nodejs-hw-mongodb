@@ -67,14 +67,11 @@ export const updateContactSchema = Joi.object({
     .messages({
       'any.only': 'Contact type must be one of: work, home, personal',
     }),
-  photo: Joi.any().optional(), // Дозволяємо будь-яке значення для photo (файл)
-}).custom((value, helpers) => {
-  // Дозволяємо оновлення, якщо є хоча б photo (req.file)
-  const { file } = helpers.state.ancestors[0]; // Доступ до req.file з multer
-  if (Object.keys(value).length === 0 && !file) {
-    return helpers.error('any.required', { message: 'At least one field or photo must be provided for update' });
-  }
-  return value;
+  photo: Joi.string().uri().optional().messages({
+    'string.uri': 'Photo must be a valid URL',
+  }),
+}).min(1).messages({
+  'object.min': 'At least one field must be provided for update',
 });
 
 export const registerSchema = Joi.object({
