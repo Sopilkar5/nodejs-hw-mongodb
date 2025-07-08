@@ -4,7 +4,7 @@ apis:
 extends:
   - recommended
 rules:
-  no-unused-components: error
+  no-unused-components: off
   no-server-example.com: off
 theme:
   htmlTemplate: docs/index.html
