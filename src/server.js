@@ -41,10 +41,13 @@ function setupServer() {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` + new URLSearchParams({
       response_type: 'code',
       client_id: process.env.GOOGLE_CLIENT_ID,
-      redirect_uri: process.env.GOOGLE_CALLBACK_URL || 'https://nodejs-hw-mongodb-08ns.onrender.com/confirm-google-auth',
+      redirect_uri: process.env.GOOGLE_CALLBACK_URL || 'https://localhost:3000/confirm-google-auth',
       scope: 'profile email',
     }).toString();
     res.json({ redirectUrl: googleAuthUrl });
+  });
+  app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to Contacts API' });
   });
   const swaggerDocument = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'docs/swagger.json')));
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -53,7 +56,7 @@ function setupServer() {
   app.use(notFoundHandler);
   app.use(errorHandler);
   const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`Сервер запущено на порту ${PORT}`);
   });
   return app;
