@@ -17,7 +17,7 @@ function setupServer() {
   const app = express();
   app.use(express.json());
   app.use(cors({
-    origin: ['https://localhost:3000', 'https://nodejs-hw-mongodb-08ns.onrender.com'],
+    origin: ['https://nodejs-hw-mongodb-08ns.onrender.com'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -41,7 +41,7 @@ function setupServer() {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` + new URLSearchParams({
       response_type: 'code',
       client_id: process.env.GOOGLE_CLIENT_ID,
-      redirect_uri: process.env.GOOGLE_CALLBACK_URL || 'https://localhost:3000/confirm-google-auth',
+      redirect_uri: process.env.GOOGLE_CALLBACK_URL || 'https://nodejs-hw-mongodb-08ns.onrender.com/confirm-google-auth',
       scope: 'profile email',
     }).toString();
     res.json({ redirectUrl: googleAuthUrl });
