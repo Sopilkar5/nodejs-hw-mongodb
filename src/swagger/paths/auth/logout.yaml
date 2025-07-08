@@ -1,0 +1,24 @@
+post:
+  tags:
+    - Auth
+  summary: Log out a user
+  operationId: logoutUser
+  description: Logs out a user by invalidating the refresh token.
+  security:
+    - bearerAuth: []
+  responses:
+    '204':
+      description: Successfully logged out
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 401
+              message:
+                type: string
+                example: Unauthorized

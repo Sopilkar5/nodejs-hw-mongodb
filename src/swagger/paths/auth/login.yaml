@@ -1,0 +1,73 @@
+post:
+  tags:
+    - Auth
+  summary: Log in a user
+  operationId: loginUser
+  description: Authenticates a user with email and password, returning access and refresh tokens.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              example: john.doe@example.com
+            password:
+              type: string
+              example: password123
+          required:
+            - email
+            - password
+  responses:
+    '200':
+      description: Successfully logged in a user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Successfully logged in an user!
+              data:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      headers:
+        Set-Cookie:
+          schema:
+            type: string
+            example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure
+    '400':
+      description: Invalid request body
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              message:
+                type: string
+                example: Invalid request body
+    '401':
+      description: Email or password is incorrect
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 401
+              message:
+                type: string
+                example: Email or password is incorrect

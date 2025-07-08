@@ -1,0 +1,55 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Contacts API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: API for managing user contacts with authentication and Google OAuth support.
+tags:
+  - name: Contacts
+    description: Operations related to managing contacts
+  - name: Auth
+    description: Authentication and user management operations
+servers:
+  - url: https://localhost:3000
+  - url: https://nodejs-hw-mongodb-08ns.onrender.com
+security:
+  - bearerAuth: []
+paths:
+  /auth/google:
+    $ref: ../src/swagger/paths/auth/google.yaml
+  /auth/confirm-google-auth:
+    $ref: ../src/swagger/paths/auth/confirm-google-auth.yaml
+  /auth/register:
+    $ref: ../src/swagger/paths/auth/register.yaml
+  /auth/login:
+    $ref: ../src/swagger/paths/auth/login.yaml
+  /auth/refresh:
+    $ref: ../src/swagger/paths/auth/refresh.yaml
+  /auth/logout:
+    $ref: ../src/swagger/paths/auth/logout.yaml
+  /auth/send-reset-email:
+    $ref: ../src/swagger/paths/auth/send-reset-email.yaml
+  /auth/reset-pwd:
+    $ref: ../src/swagger/paths/auth/reset-pwd.yaml
+  /contacts:
+    $ref: ../src/swagger/paths/contacts/get.yaml
+  /contacts/{contactId}:
+    $ref: ../src/swagger/paths/contacts/{contactId}/get.yaml
+  /contacts/{contactId}/patch:
+    $ref: ../src/swagger/paths/contacts/{contactId}/patch.yaml
+  /contacts/{contactId}/delete:
+    $ref: ../src/swagger/paths/contacts/{contactId}/delete.yaml
+  /contacts/post:
+    $ref: ../src/swagger/paths/contacts/post.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    Contact:
+      $ref: '../src/swagger/components/schemas/Contact.yaml'
+    Error:
+      $ref: '../src/swagger/components/schemas/Error.yaml'

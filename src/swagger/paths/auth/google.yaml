@@ -1,0 +1,34 @@
+get:
+  tags:
+    - Auth
+  summary: Initiate Google OAuth login
+  operationId: googleAuth
+  description: Redirects the user to Google for authentication. This endpoint initiates the OAuth 2.0 flow and always returns a 302 redirect. The 200 response is included for documentation compliance with Redocly rules but is not used in the actual implementation.
+  security: []
+  responses:
+    '200':
+      description: Success response (not used in practice, included for Redocly compliance)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Google OAuth initiated (not used)
+    '302':
+      description: Redirect to Google authentication page
+      headers:
+        Location:
+          schema:
+            type: string
+            example: https://accounts.google.com/o/oauth2/auth
+    '401':
+      description: Unauthorized - Invalid OAuth configuration or client credentials
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/Error.yaml'

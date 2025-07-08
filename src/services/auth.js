@@ -15,9 +15,13 @@ export async function registerUser({ name, email, password }) {
   return user;
 }
 
-export async function loginUser(email, password) {
+export async function loginUser(email, password, isGoogleAuth = false) {
   const user = await User.findOne({ email });
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!user) {
+    throw createError(401, 'Email or password is incorrect');
+  }
+
+  if (!isGoogleAuth && !(await bcrypt.compare(password, user.password))) {
     throw createError(401, 'Email or password is incorrect');
   }
 
